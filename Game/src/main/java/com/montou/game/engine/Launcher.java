@@ -186,9 +186,9 @@ public class Launcher {
 						Thread.sleep(TIME_BETWEEN_TURN);
 						turnCounter += 1;
 					}
-				} else {
+				} else { 
 					System.out.println(String
-							.format("Il semblerait que l'argument 'persistenceDirPath' soit invalide : %s !", args[0]));
+							.format("Il semblerait que l'argument 'persistenceDirPath' soit invalide : %s !", args[1]));
 				}
 			} else {
 				System.out.println(
