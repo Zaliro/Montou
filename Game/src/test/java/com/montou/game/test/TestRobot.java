@@ -9,9 +9,9 @@ import com.montou.game.entities.Robot;
 
 public class TestRobot {
 
-	Robot robot1;
-	Robot robot2;
-	Robot robot3;
+	private Robot robot1;
+	private Robot robot2;
+	private Robot robot3;
 
 	@Before
 	public void setup() {
