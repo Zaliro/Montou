@@ -15,14 +15,15 @@ public class TestPluginsLoader {
 
 	// Rentrer le path du BasePlugin dans : " clique droit sur le test => Run as =>
 	// Run configuration => arguments => vm arguments"
-	// sous lee forme -Durl MonJarPath
-
-	private String jarPath;
+	// sous la forme -Durl MonJarPath
+	
+	/*
+	private String jarPath = "C:/Users/Zeam/Desktop/Montou/BasePlugins/target/BasePlugins-0.0.1.jar";
 	private PluginsLoader pl;
-
+	
 	@Before
 	public void setup() {
-		this.jarPath = System.getProperty("url");
+		//this.jarPath = System.getProperty("url");
 		if (jarPath == null) {
 			System.err.println("Le chemin du jar BasePlugin est invalide");
 		} else {
@@ -42,5 +43,5 @@ public class TestPluginsLoader {
 		}
 		assertNotNull(listPlugins);
 	}
-
+	*/
 }

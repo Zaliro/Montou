@@ -35,11 +35,11 @@ public class Launcher {
 	private static final int LINES = 16;
 	private static final int COLS = 16;
 
-	private static final int BASE_LINE = 8;
-	private static final int BASE_P1_COL = 3;
-	private static final int BASE_P2_COL = 13;
+	private static final int BASE_LINE = 1;
+	private static final int BASE_P1_COL = 1;
+	private static final int BASE_P2_COL = 15;
 
-	private static final long TIME_BETWEEN_TURN = 1500;
+	private static final long TIME_BETWEEN_TURN = 5000;
 	private static final double ENERGY_REGEN_RATE = 5;
 
 	@SuppressWarnings("incomplete-switch")
