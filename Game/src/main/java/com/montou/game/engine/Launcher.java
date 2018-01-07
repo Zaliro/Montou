@@ -11,6 +11,7 @@ import com.montou.game.persistence.PersistenceManager;
 import com.montou.game.plugins.Plugin;
 import com.montou.game.plugins.PluginType;
 import com.montou.game.plugins.PluginsLoader;
+import com.montou.game.plugins.annotations.AAttack;
 import com.montou.game.plugins.annotations.AMovement;
 import com.montou.game.shared.Direction;
 import com.montou.game.shared.GameInformations;
@@ -105,6 +106,7 @@ public class Launcher {
 						// Les deux robots jouent chacun l'un après l'autre...
 						for (int i = 1; i <= 2; i++) {
 							Robot currentPlayer = (i == 1 ? gameInformations.getPlayerOne() : gameInformations.getPlayerTwo());
+							Robot opponent = (i == 1 ? gameInformations.getPlayerTwo() : gameInformations.getPlayerOne());
 
 							// Nous actionons les plugins à chaque tour...
 							for (Plugin p : actionsPlugins) {
@@ -155,6 +157,18 @@ public class Launcher {
 
 									case ATTACK:
 										// Si c'est un plugin concernant la gestion des attaques...
+										Method attackMethod = p.getClazz().getMethod("attack", GameInformations.class);
+										if(attackMethod!=null){
+											// Nous soutrayons l'énergie au joueur courant...
+											int energyCost = ((AAttack) p.getClazz().getAnnotation(AAttack.class)).energyCost();
+											// Nous vérifions si le joueur dispose d'assez d'énergie...
+											if ((currentPlayer.getEnergyPoints() - energyCost) >= 0) {
+												// Nous retirons l'énergie au joueur...
+												currentPlayer.substractEnergyPoints(energyCost);
+												// Nous executons l'attaque du joueur courant et nous retirons des points de vie à son opposant
+												opponent.substractLifePoints((int)attackMethod.invoke(p.getInstance(), gameInformations));
+											}
+										}
 										break;
 									}
 								} catch (Exception e) {
