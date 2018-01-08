@@ -95,6 +95,12 @@ public class MenuFrame extends JFrame {
 		return listPlugins;
 	}
 	List<Plugin> getP2Plugins(){
-		return null;
+		List<Plugin> listPlugins = panelPlugins.getPluginP2();
+		return listPlugins;
+	}
+	
+	List<Plugin> getGraphPlugins(){
+		List<Plugin> listPlugins = panelPlugins.getPluginGraph();
+		return listPlugins;
 	}
 }

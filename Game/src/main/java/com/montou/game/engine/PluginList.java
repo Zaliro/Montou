@@ -335,4 +335,26 @@ class PluginsList extends JPanel {
 		}
 		return tmp;
 	}
+	
+	public List<Plugin> getPluginP2() {
+		List<Plugin> tmp = new ArrayList<>();
+		if (listP2Plugin.size() != 0) {
+			for (int i = 0; i < listP2Plugin.size(); i++) {
+				Plugin p = listP2Plugin.getElementAt(i);
+				tmp.add(p);
+			}
+		}
+		return tmp;
+	}
+	
+	public List<Plugin> getPluginGraph() {
+		List<Plugin> tmp = new ArrayList<>();
+		if (listGraphPlugin.size() != 0) {
+			for (int i = 0; i < listGraphPlugin.size(); i++) {
+				Plugin p = listGraphPlugin.getElementAt(i);
+				tmp.add(p);
+			}
+		}
+		return tmp;
+	}
 }
