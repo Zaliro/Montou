@@ -30,4 +30,9 @@ public class Plugin {
 			this.instance = this.clazz.newInstance();
 		return this.instance;
 	}
+	
+	@Override
+	public String toString() {
+		return clazz.getSimpleName();
+	}
 }
