@@ -12,7 +12,7 @@ public class RobotGraphics {
 	private Color playerOneColor;
 	private Color playerTwoColor;
 	
-	// Implémentation d'une méthode graphique
+	// Implementation d'une methode graphique
 	
 	public void draw(GameInformations gameInformations, Graphics g) {
 		
@@ -23,7 +23,7 @@ public class RobotGraphics {
 		if (playerTwoColor == null)
 			playerTwoColor = new Color((int)(Math.random() * 0x1000000));
 		
-		// Génération des graphismes pour les deux robots...
+		// Generation des graphismes pour les deux robots...
 		for(int i = 0; i < 2; i++) {
 			g.setColor((i <= 0 ? playerOneColor : playerTwoColor));
 			
@@ -44,8 +44,8 @@ public class RobotGraphics {
 		}
 	}
 	
-	// Implémentation d'une persistence personnalisée
-	// Ces méthodes sont appelées car l'attribut useCustomData est à true
+	// Implementation d'une persistence personnalisee
+	// Ces methodes sont appelees car l'attribut useCustomData est e true
 	
 	public void onLoad(Object[] objects) {
 		this.playerOneColor = (Color) objects[0];

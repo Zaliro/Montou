@@ -36,9 +36,9 @@ public class Launcher {
 	private static final int COLS = 16;
 
 	private static final int BASE_P1_LINE = 1;
-	private static final int BASE_P2_LINE = 1;
+	private static final int BASE_P2_LINE = 15;
 	private static final int BASE_P1_COL = 1;
-	private static final int BASE_P2_COL = 2;
+	private static final int BASE_P2_COL = 15;
 
 	private static final long TIME_BETWEEN_TURN = 1500;
 	private static final double ENERGY_REGEN_RATE = 5;
@@ -77,7 +77,7 @@ public class Launcher {
 						System.out.println("Recuperation de la derniere partie...");
 						gameInformations = getLastSavedGameInformations();
 
-						// Nous récupérons également l'état des plugins le nécessitant...
+						// Nous recuperons egalement l'etat des plugins le necessitant...
 						List<Plugin> pluginsToRecover = loadedPlugins.stream().filter(x -> x.useCustomData())
 								.collect(Collectors.toList());
 
@@ -91,15 +91,13 @@ public class Launcher {
 						}
 					}
 
-
-					System.out.println("Tâche terminée.");
-
+					System.out.println("Teche terminee.");
 
 					MenuFrame frame = new MenuFrame("RobotWar - Menu", gameInformations, loadedPlugins);
 					frame.setVisible(true);
 					Thread t = new Thread(new Runnable() {
 						public void run() {
-							while(!frame.canStart()) {
+							while (!frame.canStart()) {
 								try {
 									Thread.sleep(200);
 								} catch (InterruptedException e) {
@@ -114,7 +112,7 @@ public class Launcher {
 					List<Plugin> p1Plugins = frame.getP1Plugins();
 					List<Plugin> p2Plugins = frame.getP2Plugins();
 					List<Plugin> graphPlugins = frame.getGraphPlugins();
-					
+
 					// Initialisation de l'environnement...
 					mainFrame = new GridFrame(String.format("RobotWar - %s plugin(s) charge(s).", loadedPlugins.size()),
 							gameInformations, graphPlugins);
@@ -130,11 +128,11 @@ public class Launcher {
 						Robot currentPlayer;
 						Robot opponent;
 						for (int i = 1; i <= 2; i++) {
-							if(i == 1) {
+							if (i == 1) {
 								currentPlayer = gameInformations.getPlayerOne();
 								opponent = gameInformations.getPlayerTwo();
 								currentPlugins = p1Plugins;
-							}else {
+							} else {
 								currentPlayer = gameInformations.getPlayerTwo();
 								opponent = gameInformations.getPlayerOne();
 								currentPlugins = p2Plugins;
@@ -158,200 +156,166 @@ public class Launcher {
 												// Nous faisons bouger le joueur...
 												Direction desiredDirection = (Direction) moveMethod
 														.invoke(p.getInstance(), gameInformations, i);
+												int currentCol = currentPlayer.getCurrentColumn();
+												int opponentCol = opponent.getCurrentColumn();
+												int currentLine = currentPlayer.getCurrentLine();
+												int opponentLine = opponent.getCurrentLine();
 												switch (desiredDirection) {
 												case UP:
 													int nextLineUp = currentPlayer.getCurrentLine() - 1;
-													if(nextLineUp < 1) {
+													
+													if (nextLineUp < 1) {
 														currentPlayer.setCurrentLine(1);
-													}
-													else if (nextLineUp != opponent.getCurrentLine()) {
+													} else if (!(nextLineUp == opponent.getCurrentLine() && currentCol == opponentCol)) {
 														currentPlayer.setCurrentLine(nextLineUp);
 													}
 													break;
 
 												case DOWN:
 													int nextLineDown = currentPlayer.getCurrentLine() + 1;
-													if(nextLineDown > LINES) {
+													
+													if (nextLineDown > LINES) {
 														currentPlayer.setCurrentLine(LINES);
-													}
-													else if (nextLineDown != opponent.getCurrentLine()) {
+													} else if (!(nextLineDown == opponent.getCurrentLine() && currentCol == opponentCol)) {
 														currentPlayer.setCurrentLine(nextLineDown);
 													}
 													break;
 
 												case LEFT:
 													int nextColLeft = currentPlayer.getCurrentColumn() - 1;
-													if(nextColLeft < 1) {
+													if (nextColLeft < 1) {
 														currentPlayer.setCurrentColumn(1);
-													}
-													else if (nextColLeft != opponent.getCurrentColumn()) {
+													} else if (!(nextColLeft == opponent.getCurrentColumn() && currentLine == opponentLine)) {
 														currentPlayer.setCurrentColumn(nextColLeft);
 													}
-													
+
 													break;
 
 												case RIGHT:
 													int nextColRight = currentPlayer.getCurrentColumn() + 1;
-													if(nextColRight > COLS) {
+													if (nextColRight > COLS) {
 														currentPlayer.setCurrentColumn(COLS);
-													}
-													else if (nextColRight != opponent.getCurrentColumn()) {
+													} else if (!(nextColRight == opponent.getCurrentColumn() && currentLine == opponentLine)) {
 														currentPlayer.setCurrentColumn(nextColRight);
 													}
-													
+
 													break;
 												}
 											}
 										}
 									}
-								
-							}catch (Exception e) {
-								// TODO Auto-generated catch block
-								e.printStackTrace();
-							}
-							}
-						}
-						
-							
-						// Les deux robots Attaquent
-								
-								for (int i = 1; i <= 2; i++) {
-									if(i == 1) {
-										currentPlayer = gameInformations.getPlayerOne();
-										opponent = gameInformations.getPlayerTwo();
-										currentPlugins = p1Plugins;
-									}else {
-										currentPlayer = gameInformations.getPlayerTwo();
-										opponent = gameInformations.getPlayerOne();
-										currentPlugins = p2Plugins;
-									}
-									for (Plugin p : currentPlugins) {
-										if(p.getType() == PluginType.ATTACK) {
-											// Si c'est un plugin concernant la gestion des attaques...
-											Method attackMethod = p.getClazz().getMethod("attack", GameInformations.class);
-	
-											if(attackMethod!=null){
-												// Nous soutrayons l'ï¿½nergie au joueur courant...
-												int energyCost = ((AAttack) p.getClazz().getAnnotation(AAttack.class)).energyCost();
-												// Nous vï¿½rifions si le joueur dispose d'assez d'ï¿½nergie...
-	
-												if ((currentPlayer.getEnergyPoints() - energyCost) >= 0) {
-													// Nous retirons l'ï¿½nergie au joueur...
-													currentPlayer.substractEnergyPoints(energyCost);
-	
-													// Nous executons l'attaque du joueur courant et nous retirons des points de vie a son opposant
-													opponent.substractLifePoints((int)attackMethod.invoke(p.getInstance(), gameInformations));
-												}
-											}
-										}
-									}
-						/*
-						for (int i = 1; i <= 2; i++) {
-							Robot currentPlayer = (i == 1 ? gameInformations.getPlayerOne()
-									: gameInformations.getPlayerTwo());
-							Robot opponent = (i == 1 ? gameInformations.getPlayerTwo()
-									: gameInformations.getPlayerOne());
 
-							// Nous actionons les plugins ï¿½ chaque tour...
-							for (Plugin p : actionsPlugins) {
-								try {
-									switch (p.getType()) {
-									case MOVEMENT:
-										// Si c'est un plugin concernant la gestion des mouvements..
-										Method moveMethod = p.getClazz().getMethod("move", GameInformations.class,
-												int.class);
-										if (moveMethod != null) {
-
-											// Nous soutrayons l'ï¿½nergie au joueur courant...
-											int energyCost = ((AMovement) p.getClazz().getAnnotation(AMovement.class))
-													.energyCost();
-											// Nous vï¿½rifions si le joueur dispose d'assez d'ï¿½nergie...
-											if ((currentPlayer.getEnergyPoints() - energyCost) >= 0) {
-												// Nous retirons l'ï¿½nergie au joueur...
-												currentPlayer.substractEnergyPoints(energyCost);
-
-												// Nous faisons bouger le joueur...
-												Direction desiredDirection = (Direction) moveMethod
-														.invoke(p.getInstance(), gameInformations, i);
-												switch (desiredDirection) {
-												case UP:
-													int nextLineUp = currentPlayer.getCurrentLine() - 1;
-													if(nextLineUp < 1) {
-														currentPlayer.setCurrentLine(1);
-													}
-													else if (nextLineUp != opponent.getCurrentLine()) {
-														currentPlayer.setCurrentLine(nextLineUp);
-													}
-													break;
-
-												case DOWN:
-													int nextLineDown = currentPlayer.getCurrentLine() + 1;
-													if(nextLineDown > LINES) {
-														currentPlayer.setCurrentLine(LINES);
-													}
-													else if (nextLineDown != opponent.getCurrentLine()) {
-														currentPlayer.setCurrentLine(nextLineDown);
-													}
-													break;
-
-												case LEFT:
-													int nextColLeft = currentPlayer.getCurrentColumn() - 1;
-													if(nextColLeft < 1) {
-														currentPlayer.setCurrentColumn(1);
-													}
-													else if (nextColLeft != opponent.getCurrentColumn()) {
-														currentPlayer.setCurrentColumn(nextColLeft);
-													}
-													
-													break;
-
-												case RIGHT:
-													int nextColRight = currentPlayer.getCurrentColumn() + 1;
-													if(nextColRight > COLS) {
-														currentPlayer.setCurrentColumn(COLS);
-													}
-													else if (nextColRight != opponent.getCurrentColumn()) {
-														currentPlayer.setCurrentColumn(nextColRight);
-													}
-													
-													break;
-												}
-											}
-										}
-										break;
-
-									case ATTACK:
-										// Si c'est un plugin concernant la gestion des attaques...
-										Method attackMethod = p.getClazz().getMethod("attack", GameInformations.class);
-
-										if(attackMethod!=null){
-											// Nous soutrayons l'ï¿½nergie au joueur courant...
-											int energyCost = ((AAttack) p.getClazz().getAnnotation(AAttack.class)).energyCost();
-											// Nous vï¿½rifions si le joueur dispose d'assez d'ï¿½nergie...
-
-											if ((currentPlayer.getEnergyPoints() - energyCost) >= 0) {
-												// Nous retirons l'ï¿½nergie au joueur...
-												currentPlayer.substractEnergyPoints(energyCost);
-
-												// Nous executons l'attaque du joueur courant et nous retirons des points de vie a son opposant
-												opponent.substractLifePoints((int)attackMethod.invoke(p.getInstance(), gameInformations));
-											}
-										}
-										break;
-									}
 								} catch (Exception e) {
 									// TODO Auto-generated catch block
 									e.printStackTrace();
 								}
-								*/
-								// Regeneration des points d'energie...
-								currentPlayer.regen(ENERGY_REGEN_RATE);
-
-								// Affichage d'un recapitulatif des informations du joueur pour une meilleure
-								// visibilite...
-								System.out.println(currentPlayer.toString());
 							}
-						
+						}
+
+						// Les deux robots Attaquent
+
+						for (int i = 1; i <= 2; i++) {
+							if (i == 1) {
+								currentPlayer = gameInformations.getPlayerOne();
+								opponent = gameInformations.getPlayerTwo();
+								currentPlugins = p1Plugins;
+							} else {
+								currentPlayer = gameInformations.getPlayerTwo();
+								opponent = gameInformations.getPlayerOne();
+								currentPlugins = p2Plugins;
+							}
+							for (Plugin p : currentPlugins) {
+								if (p.getType() == PluginType.ATTACK) {
+									// Si c'est un plugin concernant la gestion des attaques...
+									Method attackMethod = p.getClazz().getMethod("attack", GameInformations.class);
+
+									if (attackMethod != null) {
+										// Nous soutrayons l'energie au joueur courant...
+										int energyCost = ((AAttack) p.getClazz().getAnnotation(AAttack.class))
+												.energyCost();
+										// Nous verifions si le joueur dispose d'assez d'energie...
+
+										if ((currentPlayer.getEnergyPoints() - energyCost) >= 0) {
+											// Nous retirons l'energie au joueur...
+											currentPlayer.substractEnergyPoints(energyCost);
+
+											// Nous executons l'attaque du joueur courant et nous retirons des points de
+											// vie a son opposant
+											opponent.substractLifePoints(
+													(int) attackMethod.invoke(p.getInstance(), gameInformations));
+										}
+									}
+								}
+							}
+							/*
+							 * for (int i = 1; i <= 2; i++) { Robot currentPlayer = (i == 1 ?
+							 * gameInformations.getPlayerOne() : gameInformations.getPlayerTwo()); Robot
+							 * opponent = (i == 1 ? gameInformations.getPlayerTwo() :
+							 * gameInformations.getPlayerOne());
+							 * 
+							 * // Nous actionons les plugins e chaque tour... for (Plugin p :
+							 * actionsPlugins) { try { switch (p.getType()) { case MOVEMENT: // Si c'est un
+							 * plugin concernant la gestion des mouvements.. Method moveMethod =
+							 * p.getClazz().getMethod("move", GameInformations.class, int.class); if
+							 * (moveMethod != null) {
+							 * 
+							 * // Nous soutrayons l'energie au joueur courant... int energyCost =
+							 * ((AMovement) p.getClazz().getAnnotation(AMovement.class)) .energyCost(); //
+							 * Nous verifions si le joueur dispose d'assez d'energie... if
+							 * ((currentPlayer.getEnergyPoints() - energyCost) >= 0) { // Nous retirons
+							 * l'energie au joueur... currentPlayer.substractEnergyPoints(energyCost);
+							 * 
+							 * // Nous faisons bouger le joueur... Direction desiredDirection = (Direction)
+							 * moveMethod .invoke(p.getInstance(), gameInformations, i); switch
+							 * (desiredDirection) { case UP: int nextLineUp = currentPlayer.getCurrentLine()
+							 * - 1; if(nextLineUp < 1) { currentPlayer.setCurrentLine(1); } else if
+							 * (nextLineUp != opponent.getCurrentLine()) {
+							 * currentPlayer.setCurrentLine(nextLineUp); } break;
+							 * 
+							 * case DOWN: int nextLineDown = currentPlayer.getCurrentLine() + 1;
+							 * if(nextLineDown > LINES) { currentPlayer.setCurrentLine(LINES); } else if
+							 * (nextLineDown != opponent.getCurrentLine()) {
+							 * currentPlayer.setCurrentLine(nextLineDown); } break;
+							 * 
+							 * case LEFT: int nextColLeft = currentPlayer.getCurrentColumn() - 1;
+							 * if(nextColLeft < 1) { currentPlayer.setCurrentColumn(1); } else if
+							 * (nextColLeft != opponent.getCurrentColumn()) {
+							 * currentPlayer.setCurrentColumn(nextColLeft); }
+							 * 
+							 * break;
+							 * 
+							 * case RIGHT: int nextColRight = currentPlayer.getCurrentColumn() + 1;
+							 * if(nextColRight > COLS) { currentPlayer.setCurrentColumn(COLS); } else if
+							 * (nextColRight != opponent.getCurrentColumn()) {
+							 * currentPlayer.setCurrentColumn(nextColRight); }
+							 * 
+							 * break; } } } break;
+							 * 
+							 * case ATTACK: // Si c'est un plugin concernant la gestion des attaques...
+							 * Method attackMethod = p.getClazz().getMethod("attack",
+							 * GameInformations.class);
+							 * 
+							 * if(attackMethod!=null){ // Nous soutrayons l'energie au joueur courant... int
+							 * energyCost = ((AAttack)
+							 * p.getClazz().getAnnotation(AAttack.class)).energyCost(); // Nous verifions si
+							 * le joueur dispose d'assez d'energie...
+							 * 
+							 * if ((currentPlayer.getEnergyPoints() - energyCost) >= 0) { // Nous retirons
+							 * l'energie au joueur... currentPlayer.substractEnergyPoints(energyCost);
+							 * 
+							 * // Nous executons l'attaque du joueur courant et nous retirons des points de
+							 * vie a son opposant
+							 * opponent.substractLifePoints((int)attackMethod.invoke(p.getInstance(),
+							 * gameInformations)); } } break; } } catch (Exception e) { // TODO
+							 * Auto-generated catch block e.printStackTrace(); }
+							 */
+							// Regeneration des points d'energie...
+							currentPlayer.regen(ENERGY_REGEN_RATE);
+
+							// Affichage d'un recapitulatif des informations du joueur pour une meilleure
+							// visibilite...
+							System.out.println(currentPlayer.toString());
+						}
 
 						// Nous verifions si la partie est terminee...
 						int gameStatus = checkGameStatus();
@@ -361,7 +325,6 @@ public class Launcher {
 
 						// Nous rafraichissons la frame...
 						mainFrame.repaint();
-
 
 						// Sauvegarde de l'etat de la partie...
 
