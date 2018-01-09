@@ -3,7 +3,7 @@ package com.montou.basePlugins.attack;
 import com.montou.game.plugins.annotations.AAttack;
 import com.montou.game.shared.GameInformations;
 
-@AAttack(energyCost = 10)
+@AAttack(energyCost = 10, range = 1)
 public class HandToHandAttacks {
 	private int damage = 15;
 	

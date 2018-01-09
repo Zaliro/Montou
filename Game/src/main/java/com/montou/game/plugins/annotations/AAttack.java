@@ -10,4 +10,5 @@ import java.lang.annotation.Target;
 public @interface AAttack {
 	public boolean useCustomData() default false;
 	public int energyCost();
+	public int range();
 }
