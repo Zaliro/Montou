@@ -14,6 +14,8 @@ public class Robot implements Serializable {
 	private int maxEnergyPoint;
 	private int energyPoints;
 
+	private int rangeAttack;
+
 	public Robot(String name, int startLine, int startColumn) {
 		this.name = name;
 		this.currentLine = startLine;
@@ -71,7 +73,7 @@ public class Robot implements Serializable {
 			value = 0;
 		if (this.energyPoints < 0)
 			this.energyPoints = 0;
-		System.out.println(String.format("Le joueur %s a perdu %s point(s) d'énergie (%s/%s) !", this.name, value,
+		System.out.println(String.format("Le joueur %s a perdu %s point(s) d'energie (%s/%s) !", this.name, value,
 				this.energyPoints, this.maxEnergyPoint));
 	}
 
@@ -90,12 +92,21 @@ public class Robot implements Serializable {
 		if (this.energyPoints > 100)
 			this.energyPoints = 100;
 
-		System.out.println(String.format("Le joueur %s a récupéré %s points d'énergie (%s/100) !", this.name, sum,
+		System.out.println(String.format("Le joueur %s a recupere %s points d'energie (%s/100) !", this.name, sum,
 				this.energyPoints));
 	}
 
 	public boolean isActive() {
 		return this.lifePoints > 0;
+	}
+	
+
+	public int getRangeAttack() {
+		return rangeAttack;
+	}
+
+	public void setRangeAttack(int rangeAttack) {
+		this.rangeAttack = rangeAttack;
 	}
 
 	@Override
@@ -103,4 +114,6 @@ public class Robot implements Serializable {
 		return String.format("Name : %s, Line : %s, Column : %s, LifePoints : %s, EnergyPoints : %s, IsActive : %s",
 				this.name, this.currentLine, this.currentColumn, this.lifePoints, this.energyPoints, this.isActive());
 	}
+	
+	
 }

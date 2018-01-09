@@ -18,12 +18,12 @@ public class GridFrame extends Frame {
 		super.setResizable(false);
 		this.gameInformations = gameInformations;
 		
-		// Création du canvas...
+		// Creation du canvas...
 		this.gridCanvas = new GridCanvas(this.gameInformations.getWidth(), this.gameInformations.getHeight(),
 				this.gameInformations.getLines(), this.gameInformations.getCols(), graphicsPlugins, gameInformations);
 		super.add(gridCanvas);
 		
-		// Abonnement à onWindowClosing...
+		// Abonnement e onWindowClosing...
 		super.addWindowListener(new WindowAdapter() {
 			public void windowClosing(WindowEvent e) {
 				GridFrame.this.onWindowClosing();
@@ -37,7 +37,7 @@ public class GridFrame extends Frame {
 	}
 	
 	public void onWindowClosing() {
-		// Nous forcons l'arrêt de la partie...
+		// Nous forcons l'arret de la partie...
 		this.gameInformations.finish();
 	}
 	

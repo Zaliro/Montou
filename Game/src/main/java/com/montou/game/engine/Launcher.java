@@ -164,7 +164,7 @@ public class Launcher {
 													
 													if (nextLineUp < 1) {
 														currentPlayer.setCurrentLine(1);
-													} else if (!(nextLineUp == opponent.getCurrentLine() && currentCol == opponentCol)) {
+													} else if (!(nextLineUp == opponentLine && currentCol == opponentCol)) {
 														currentPlayer.setCurrentLine(nextLineUp);
 														// Nous retirons l'energie au joueur...
 														currentPlayer.substractEnergyPoints(energyCost);
@@ -176,7 +176,7 @@ public class Launcher {
 													
 													if (nextLineDown > LINES) {
 														currentPlayer.setCurrentLine(LINES);
-													} else if (!(nextLineDown == opponent.getCurrentLine() && currentCol == opponentCol)) {
+													} else if (!(nextLineDown == opponentLine && currentCol == opponentCol)) {
 														currentPlayer.setCurrentLine(nextLineDown);
 														// Nous retirons l'energie au joueur...
 														currentPlayer.substractEnergyPoints(energyCost);
@@ -187,7 +187,7 @@ public class Launcher {
 													int nextColLeft = currentPlayer.getCurrentColumn() - 1;
 													if (nextColLeft < 1) {
 														currentPlayer.setCurrentColumn(1);
-													} else if (!(nextColLeft == opponent.getCurrentColumn() && currentLine == opponentLine)) {
+													} else if (!(nextColLeft == opponentCol && currentLine == opponentLine)) {
 														currentPlayer.setCurrentColumn(nextColLeft);
 														// Nous retirons l'energie au joueur...
 														currentPlayer.substractEnergyPoints(energyCost);
@@ -199,7 +199,7 @@ public class Launcher {
 													int nextColRight = currentPlayer.getCurrentColumn() + 1;
 													if (nextColRight > COLS) {
 														currentPlayer.setCurrentColumn(COLS);
-													} else if (!(nextColRight == opponent.getCurrentColumn() && currentLine == opponentLine)) {
+													} else if (!(nextColRight == opponentCol && currentLine == opponentLine)) {
 														currentPlayer.setCurrentColumn(nextColRight);
 														// Nous retirons l'energie au joueur...
 														currentPlayer.substractEnergyPoints(energyCost);
@@ -234,11 +234,19 @@ public class Launcher {
 								if (p.getType() == PluginType.ATTACK) {
 									// Si c'est un plugin concernant la gestion des attaques...
 									Method attackMethod = p.getClazz().getMethod("attack", GameInformations.class);
+									
+									// On recupere l'information de la taille du range de l'attack
+									int rangeAttack = ((AAttack) p.getClazz().getAnnotation(AAttack.class))
+											.range();
+									
+									currentPlayer.setRangeAttack(rangeAttack);
 
 									if (attackMethod != null && (int)attackMethod.invoke(p.getInstance(), gameInformations) > 0) {
 										// Nous soutrayons l'energie au joueur courant...
 										int energyCost = ((AAttack) p.getClazz().getAnnotation(AAttack.class))
 												.energyCost();
+										
+										
 										// Nous verifions si le joueur dispose d'assez d'energie...
 
 										if ((currentPlayer.getEnergyPoints() - energyCost) >= 0) {
