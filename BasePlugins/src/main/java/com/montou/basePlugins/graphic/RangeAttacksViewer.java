@@ -22,20 +22,16 @@ public class RangeAttacksViewer {
 			int decalage = 0;
 			for(int j = 1;j <= rangePos-x;j++) {
 				decalage = j;
-				System.out.print(" ");
 			}
 			int largeur = 0;
 			for(int z = 1;z <= x*2-1;z++){
 				largeur = z;
-				System.out.print("*");
 			}
 			System.out.println();
 			if(robot.getName() == "P1") {
-				System.out.println("Joueurs 1");
 				g.setColor(new Color(255, 0, 0, 50));
 			}
 			else {
-				System.out.format("jours : %s", robot.getName());
 				g.setColor(new Color(0,255, 0, 50));
 			}
 			g.fillRect((robotCol-rangePos+decalage)*rowWid, (robotLine - (rangePos - x + 1))*rowHt, largeur*rowWid, rowHt);
