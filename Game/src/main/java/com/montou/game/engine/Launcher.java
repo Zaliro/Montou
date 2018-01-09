@@ -150,8 +150,6 @@ public class Launcher {
 													.energyCost();
 											// Nous verifions si le joueur dispose d'assez d'energie...
 											if ((currentPlayer.getEnergyPoints() - energyCost) >= 0) {
-												// Nous retirons l'energie au joueur...
-												currentPlayer.substractEnergyPoints(energyCost);
 
 												// Nous faisons bouger le joueur...
 												Direction desiredDirection = (Direction) moveMethod
@@ -168,6 +166,8 @@ public class Launcher {
 														currentPlayer.setCurrentLine(1);
 													} else if (!(nextLineUp == opponent.getCurrentLine() && currentCol == opponentCol)) {
 														currentPlayer.setCurrentLine(nextLineUp);
+														// Nous retirons l'energie au joueur...
+														currentPlayer.substractEnergyPoints(energyCost);
 													}
 													break;
 
@@ -178,6 +178,8 @@ public class Launcher {
 														currentPlayer.setCurrentLine(LINES);
 													} else if (!(nextLineDown == opponent.getCurrentLine() && currentCol == opponentCol)) {
 														currentPlayer.setCurrentLine(nextLineDown);
+														// Nous retirons l'energie au joueur...
+														currentPlayer.substractEnergyPoints(energyCost);
 													}
 													break;
 
@@ -187,6 +189,8 @@ public class Launcher {
 														currentPlayer.setCurrentColumn(1);
 													} else if (!(nextColLeft == opponent.getCurrentColumn() && currentLine == opponentLine)) {
 														currentPlayer.setCurrentColumn(nextColLeft);
+														// Nous retirons l'energie au joueur...
+														currentPlayer.substractEnergyPoints(energyCost);
 													}
 
 													break;
@@ -197,6 +201,8 @@ public class Launcher {
 														currentPlayer.setCurrentColumn(COLS);
 													} else if (!(nextColRight == opponent.getCurrentColumn() && currentLine == opponentLine)) {
 														currentPlayer.setCurrentColumn(nextColRight);
+														// Nous retirons l'energie au joueur...
+														currentPlayer.substractEnergyPoints(energyCost);
 													}
 
 													break;
@@ -229,7 +235,7 @@ public class Launcher {
 									// Si c'est un plugin concernant la gestion des attaques...
 									Method attackMethod = p.getClazz().getMethod("attack", GameInformations.class);
 
-									if (attackMethod != null) {
+									if (attackMethod != null && (int)attackMethod.invoke(p.getInstance(), gameInformations) > 0) {
 										// Nous soutrayons l'energie au joueur courant...
 										int energyCost = ((AAttack) p.getClazz().getAnnotation(AAttack.class))
 												.energyCost();
@@ -247,68 +253,7 @@ public class Launcher {
 									}
 								}
 							}
-							/*
-							 * for (int i = 1; i <= 2; i++) { Robot currentPlayer = (i == 1 ?
-							 * gameInformations.getPlayerOne() : gameInformations.getPlayerTwo()); Robot
-							 * opponent = (i == 1 ? gameInformations.getPlayerTwo() :
-							 * gameInformations.getPlayerOne());
-							 * 
-							 * // Nous actionons les plugins e chaque tour... for (Plugin p :
-							 * actionsPlugins) { try { switch (p.getType()) { case MOVEMENT: // Si c'est un
-							 * plugin concernant la gestion des mouvements.. Method moveMethod =
-							 * p.getClazz().getMethod("move", GameInformations.class, int.class); if
-							 * (moveMethod != null) {
-							 * 
-							 * // Nous soutrayons l'energie au joueur courant... int energyCost =
-							 * ((AMovement) p.getClazz().getAnnotation(AMovement.class)) .energyCost(); //
-							 * Nous verifions si le joueur dispose d'assez d'energie... if
-							 * ((currentPlayer.getEnergyPoints() - energyCost) >= 0) { // Nous retirons
-							 * l'energie au joueur... currentPlayer.substractEnergyPoints(energyCost);
-							 * 
-							 * // Nous faisons bouger le joueur... Direction desiredDirection = (Direction)
-							 * moveMethod .invoke(p.getInstance(), gameInformations, i); switch
-							 * (desiredDirection) { case UP: int nextLineUp = currentPlayer.getCurrentLine()
-							 * - 1; if(nextLineUp < 1) { currentPlayer.setCurrentLine(1); } else if
-							 * (nextLineUp != opponent.getCurrentLine()) {
-							 * currentPlayer.setCurrentLine(nextLineUp); } break;
-							 * 
-							 * case DOWN: int nextLineDown = currentPlayer.getCurrentLine() + 1;
-							 * if(nextLineDown > LINES) { currentPlayer.setCurrentLine(LINES); } else if
-							 * (nextLineDown != opponent.getCurrentLine()) {
-							 * currentPlayer.setCurrentLine(nextLineDown); } break;
-							 * 
-							 * case LEFT: int nextColLeft = currentPlayer.getCurrentColumn() - 1;
-							 * if(nextColLeft < 1) { currentPlayer.setCurrentColumn(1); } else if
-							 * (nextColLeft != opponent.getCurrentColumn()) {
-							 * currentPlayer.setCurrentColumn(nextColLeft); }
-							 * 
-							 * break;
-							 * 
-							 * case RIGHT: int nextColRight = currentPlayer.getCurrentColumn() + 1;
-							 * if(nextColRight > COLS) { currentPlayer.setCurrentColumn(COLS); } else if
-							 * (nextColRight != opponent.getCurrentColumn()) {
-							 * currentPlayer.setCurrentColumn(nextColRight); }
-							 * 
-							 * break; } } } break;
-							 * 
-							 * case ATTACK: // Si c'est un plugin concernant la gestion des attaques...
-							 * Method attackMethod = p.getClazz().getMethod("attack",
-							 * GameInformations.class);
-							 * 
-							 * if(attackMethod!=null){ // Nous soutrayons l'energie au joueur courant... int
-							 * energyCost = ((AAttack)
-							 * p.getClazz().getAnnotation(AAttack.class)).energyCost(); // Nous verifions si
-							 * le joueur dispose d'assez d'energie...
-							 * 
-							 * if ((currentPlayer.getEnergyPoints() - energyCost) >= 0) { // Nous retirons
-							 * l'energie au joueur... currentPlayer.substractEnergyPoints(energyCost);
-							 * 
-							 * // Nous executons l'attaque du joueur courant et nous retirons des points de
-							 * vie a son opposant
-							 * opponent.substractLifePoints((int)attackMethod.invoke(p.getInstance(),
-							 * gameInformations)); } } break; } } catch (Exception e) { // TODO
-							 * Auto-generated catch block e.printStackTrace(); }
-							 */
+							
 							// Regeneration des points d'energie...
 							currentPlayer.regen(ENERGY_REGEN_RATE);
 
