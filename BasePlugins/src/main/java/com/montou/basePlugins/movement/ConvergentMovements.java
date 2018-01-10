@@ -7,7 +7,7 @@ import com.montou.game.shared.Direction;
 import com.montou.game.shared.GameInformations;
 
 @AMovement(energyCost = 5)
-public class ConvergentMovement {
+public class ConvergentMovements {
 
 	private int abs(int n) {
 		return Math.abs(n);

@@ -8,7 +8,7 @@ import com.montou.game.plugins.annotations.AGraphic;
 import com.montou.game.shared.GameInformations;
 
 @AGraphic(useCustomData = false)
-public class RangeAttacksViewer {
+public class RangeViewer {
 	
 	private int rowHt,rowWid;
 	

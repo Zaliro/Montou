@@ -7,7 +7,7 @@ import com.montou.game.plugins.annotations.AGraphic;
 import com.montou.game.shared.GameInformations;
 
 @AGraphic(useCustomData = true)
-public class RobotGraphics {
+public class RobotsDesigner {
 	
 	private Color playerOneColor;
 	private Color playerTwoColor;

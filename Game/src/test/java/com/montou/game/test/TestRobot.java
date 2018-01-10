@@ -22,7 +22,7 @@ public class TestRobot {
 
 	@Test
 	public void substractLifePointsTest() {
-		// test avec valeur négative, positive, et si le robot passe en dessous de 0
+		// test avec valeur negative, positive, et si le robot passe en dessous de 0
 
 		robot1.substractLifePoints(-20);
 		robot2.substractLifePoints(20);

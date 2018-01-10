@@ -26,7 +26,7 @@ public class PluginsLoader extends ClassLoader {
 	public PluginsLoader(String path) throws ClassNotFoundException {
 		this.jarPath = path;
 		
-		// Injection des classes "shared" pour la résolution des liens...
+		// Injection des classes "shared" pour la resolution des liens...
 		this.loadClass("com.montou.game.shared.Direction");
 		this.loadClass("com.montou.game.shared.GameInformations");
 	}
@@ -39,7 +39,7 @@ public class PluginsLoader extends ClassLoader {
 			JarFile jarFile = new JarFile(this.jarPath);
 			Enumeration<? extends JarEntry> en = jarFile.entries();
 			while(en.hasMoreElements()) {
-				// Tant qu'il y a des élements dans l'archive...
+				// Tant qu'il y a des elements dans l'archive...
 				JarEntry jarEntry = en.nextElement();
 				if (jarEntry.getName().endsWith(".class")) {
 					// Si il s'agit bien d'une classe...
@@ -68,7 +68,7 @@ public class PluginsLoader extends ClassLoader {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
-		System.out.println(String.format("%s plugin(s) chargé(s) !", plugins.size()));
+		System.out.println(String.format("%s plugin(s) charge(s) !", plugins.size()));
 		
 		return plugins;
 	}
@@ -76,7 +76,7 @@ public class PluginsLoader extends ClassLoader {
 	@Override
 	public Class findClass(String url) throws ClassNotFoundException {
 		
-		// Hotfix pour la résolution des liens...
+		// Hotfix pour la resolution des liens...
 		if (!url.contains(".class")) {
 			return Class.forName(url);
 		}
@@ -86,7 +86,7 @@ public class PluginsLoader extends ClassLoader {
 			
 			Enumeration<? extends ZipEntry> en = zf.entries();
 			while (en.hasMoreElements()) {
-				// Tant qu'il y a des élements dans l'archive...
+				// Tant qu'il y a des elements dans l'archive...
 				ZipEntry e = en.nextElement();
 				if (e != null && url.equals(e.getName())) {
 					// Si le nom correspond...

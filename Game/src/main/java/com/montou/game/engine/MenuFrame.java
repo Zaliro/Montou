@@ -50,11 +50,9 @@ public class MenuFrame extends JFrame {
 		
 		panelHome.setBounds(0, 0, gameInformations.getWidth(), gameInformations.getHeight());
 		panelHome.setLayout(null);
-
-
 	
 		//Code 1st screen
-		JButton bNewGame = new JButton("New game");
+		JButton bNewGame = new JButton("Nouvelle partie");
 		bNewGame.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				setContentPane(panelPlugins);
@@ -63,7 +61,7 @@ public class MenuFrame extends JFrame {
 		});
 		bNewGame.setBounds(135, 97, 196, 61);
 			
-		JButton bContinue = new JButton("Continue last game");
+		JButton bContinue = new JButton("Poursuivre");
 		bContinue.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
 			}

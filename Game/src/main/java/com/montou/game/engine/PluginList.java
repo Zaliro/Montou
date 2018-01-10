@@ -1,6 +1,8 @@
 package com.montou.game.engine;
 
 import java.awt.BorderLayout;
+import java.awt.Dimension;
+import java.awt.Font;
 import java.awt.GridLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -8,10 +10,12 @@ import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 
+import javax.swing.BoxLayout;
 import javax.swing.DefaultListModel;
 import javax.swing.DefaultListSelectionModel;
 import javax.swing.JButton;
 import javax.swing.JFrame;
+import javax.swing.JLabel;
 import javax.swing.JList;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
@@ -47,7 +51,7 @@ class PluginsList extends JPanel {
 	public PluginsList(List<Plugin> plugins, GameInformations gameInformations) {
 
 		setBounds(0, 0, gameInformations.getWidth(), gameInformations.getHeight());
-		setLayout(new GridLayout(5, 1));
+		setLayout(new GridLayout(8, 1));
 
 		listAllPlugin = new DefaultListModel<Plugin>();
 		listAll = new JList<Plugin>(listAllPlugin);
@@ -57,24 +61,57 @@ class PluginsList extends JPanel {
 		listP1 = new JList<Plugin>(listP1Plugin);
 		listP2Plugin = new DefaultListModel<Plugin>();
 		listP2 = new JList<Plugin>(listP2Plugin);
+		
+		// Improvements
+		
+		JPanel headerLabelPanel = new JPanel(new GridLayout(1, 1));
+		JLabel headerLabel = new JLabel("Configuration des plugins");
+		Font baseFont = headerLabel.getFont();
+		headerLabel.setFont(new Font(baseFont.getName(), Font.BOLD, 25));
+		headerLabel.setHorizontalAlignment(JLabel.CENTER);
+		headerLabelPanel.add(headerLabel);
+		
+		add(headerLabelPanel);
+		
+		JPanel playersLabelsPanel = new JPanel(new GridLayout(1, 2));
+		
+		JLabel playerOnePluginsLabel = new JLabel("Joueur 1");
+		playerOnePluginsLabel.setFont(new Font(baseFont.getName(), Font.ITALIC, 15));
+		playerOnePluginsLabel.setHorizontalAlignment(JLabel.CENTER);
+		
+		JLabel playerTwoPluginsLabel = new JLabel("Joueur 2");
+		playerTwoPluginsLabel.setFont(new Font(baseFont.getName(), Font.ITALIC, 15));
+		playerTwoPluginsLabel.setHorizontalAlignment(JLabel.CENTER);
+		
+		playersLabelsPanel.add(playerOnePluginsLabel, BorderLayout.WEST);
+		playersLabelsPanel.add(playerTwoPluginsLabel, BorderLayout.EAST);
+		
+		JPanel graphicsLabelPanel = new JPanel(new GridLayout(1, 1));
+		JLabel graphicsPluginsLabel = new JLabel("Graphique(s)");
+		graphicsPluginsLabel.setFont(new Font(baseFont.getName(), Font.ITALIC, 15));
+		graphicsPluginsLabel.setHorizontalAlignment(JLabel.CENTER);
+		
+		graphicsLabelPanel.add(graphicsPluginsLabel);
+		
+		// Improvements (End)
 
 		JScrollPane panelAll = new JScrollPane(listAll);
 		JScrollPane panelGraph = new JScrollPane(listGraph);
-		JButton bRemGraph = new JButton("Remove of graphics");
-		JPanel PanelGraphContainer = new JPanel();
-		PanelGraphContainer.setLayout(new GridLayout(2, 1));
+		JButton bRemGraph = new JButton("Supprimer");
+		JPanel panelGraphContainer = new JPanel();
+		panelGraphContainer.setLayout(new GridLayout(2, 1));
 		JScrollPane panelp1 = new JScrollPane(listP1);
 		JScrollPane panelp2 = new JScrollPane(listP2);
 		JPanel players = new JPanel();
-		JButton bAdd1 = new JButton("add for P1 \n (Globally if graphic)");
-		JButton bAdd2 = new JButton("add for P2 \n (Globally if graphic)");
-		JButton bRem1 = new JButton("remove for P1");
-		JButton bRem2 = new JButton("remove for P2");
+		JButton bAdd1 = new JButton("Ajouter");
+		JButton bAdd2 = new JButton("Ajouter");
+		JButton bRem1 = new JButton("Supprimer");
+		JButton bRem2 = new JButton("Supprimer");
 		JPanel buttonsPlayers = new JPanel();
 		players.setLayout(new GridLayout(1, 2));
 
-		JButton bStart = new JButton("Start Game");
-		JButton bBack = new JButton("Back");
+		JButton bStart = new JButton("Lancer");
+		JButton bBack = new JButton("Retour");
 		JPanel buttonsConfig = new JPanel();
 		buttonsConfig.setLayout(new GridLayout(3, 1));
 		buttonsPlayers.setLayout(new GridLayout(2, 2));
@@ -297,6 +334,10 @@ class PluginsList extends JPanel {
 
 		// FIN LISTENER
 		add(panelAll);
+		
+		// Improvements
+		add(playersLabelsPanel);
+		
 		players.add(panelp1, BorderLayout.LINE_START);
 		players.add(panelp2, BorderLayout.LINE_END);
 		add(players);
@@ -306,9 +347,13 @@ class PluginsList extends JPanel {
 		buttonsPlayers.add(bRem1);
 		buttonsPlayers.add(bRem2);
 		add(buttonsPlayers);
-		PanelGraphContainer.add(panelGraph);
-		PanelGraphContainer.add(bRemGraph);
-		add(PanelGraphContainer);
+		
+		// Improvements
+		add(graphicsLabelPanel);
+		
+		panelGraphContainer.add(panelGraph);
+		panelGraphContainer.add(bRemGraph);
+		add(panelGraphContainer);
 		buttonsConfig.add(new JPanel());
 		buttonsConfig.add(bStart);
 		buttonsConfig.add(bBack);

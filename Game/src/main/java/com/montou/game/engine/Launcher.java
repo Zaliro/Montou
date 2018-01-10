@@ -3,6 +3,7 @@ package com.montou.game.engine;
 import java.io.File;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -91,9 +92,9 @@ public class Launcher {
 						}
 					}
 
-					System.out.println("Teche terminee.");
+					System.out.println("Tache terminee.");
 
-					MenuFrame frame = new MenuFrame("RobotWar - Menu", gameInformations, loadedPlugins);
+					MenuFrame frame = new MenuFrame("RobotWar - Configuration", gameInformations, loadedPlugins);
 					frame.setVisible(true);
 					Thread t = new Thread(new Runnable() {
 						public void run() {
@@ -113,15 +114,23 @@ public class Launcher {
 					List<Plugin> p2Plugins = frame.getP2Plugins();
 					List<Plugin> graphPlugins = frame.getGraphPlugins();
 
+					// Comptons les plugins actifs...
+					List<Plugin> allDistinctPlugins = p1Plugins;
+					p2Plugins.forEach(p -> {
+						if (!allDistinctPlugins.contains(p))
+							allDistinctPlugins.add(p);
+					});
+					allDistinctPlugins.addAll(graphPlugins);					
+
 					// Initialisation de l'environnement...
-					mainFrame = new GridFrame(String.format("RobotWar - %s plugin(s) charge(s).", loadedPlugins.size()),
+					mainFrame = new GridFrame(String.format("RobotWar - %s plugin(s) actif(s).", allDistinctPlugins.size()),
 							gameInformations, graphPlugins);
 					mainFrame.setVisible(true);
 
 					// Deroulement de la partie, jusqu'a ce qu'un des robots ne soit plus actif...
 					int turnCounter = 1;
 					while (!gameInformations.isFinished()) {
-						System.out.println(String.format("execution du tour %s...", turnCounter));
+						System.out.println(String.format("Execution du tour %s...", turnCounter));
 
 						// Les deux robots Bougent
 						List<Plugin> currentPlugins;
@@ -272,8 +281,13 @@ public class Launcher {
 
 						// Nous verifions si la partie est terminee...
 						int gameStatus = checkGameStatus();
+						System.out.println(String.format("GameStatusCode : %s", gameStatus));
 						if (gameStatus != 0) {
 							gameInformations.finish(gameStatus);
+							if (gameStatus == 1 || gameStatus == 2)
+								System.out.println(String.format("Le joueur %s gagne la partie !", gameStatus));
+							else if (gameStatus == 3)
+								System.out.println("Les deux joueurs sont ex æquo !");
 						}
 
 						// Nous rafraichissons la frame...
@@ -286,6 +300,7 @@ public class Launcher {
 						Thread.sleep(TIME_BETWEEN_TURN);
 						turnCounter += 1;
 					}
+					
 				} else {
 					System.out.println(String
 							.format("Il semblerait que l'argument 'persistenceDirPath' soit invalide : %s !", args[1]));
