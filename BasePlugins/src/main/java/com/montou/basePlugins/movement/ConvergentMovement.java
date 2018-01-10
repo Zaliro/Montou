@@ -36,18 +36,14 @@ public class ConvergentMovement {
 		if (abs(deltax) > abs(deltay)) {
 
 			if ((deltax / abs(deltax)) == 1) {
-				System.out.println("right");
 				return Direction.RIGHT;
 			} else {
-				System.out.println("left");
 				return Direction.LEFT;
 			}
 		} else {
 			if ((deltay / abs(deltay)) == 1) {
-				System.out.println("down");
 				return Direction.DOWN;
 			} else {
-				System.out.println("up");
 				return Direction.UP;
 			}
 		}
