@@ -7,7 +7,7 @@
 <stringAttribute key="M2_PROFILES" value=""/>
 <listAttribute key="M2_PROPERTIES">
 <listEntry value="exec.mainClass=com.montou.game.engine.Launcher"/>
-<listEntry value="exec.args=C:/Users/Zaliro/Documents/GithubRepository/Montou/BasePlugins/target/BasePlugins-0.0.1.jar C:/Users/Zaliro/Documents/GithubRepository/Montou/Persistence"/>
+<listEntry value="exec.args=C:\Users\Zeam\Desktop\Montou/BasePlugins/target/BasePlugins-0.0.1.jar C:\Users\Zeam\Desktop\Persistence"/>
 </listAttribute>
 <stringAttribute key="M2_RUNTIME" value="EMBEDDED"/>
 <booleanAttribute key="M2_SKIP_TESTS" value="false"/>

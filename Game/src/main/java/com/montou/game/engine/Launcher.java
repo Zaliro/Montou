@@ -115,18 +115,24 @@ public class Launcher {
 					List<Plugin> graphPlugins = frame.getGraphPlugins();
 
 					// Comptons les plugins actifs...
-					List<Plugin> allDistinctPlugins = p1Plugins;
+					List<Plugin> allDistinctPlugins = new ArrayList<Plugin>();
+					for (Plugin plugin : p1Plugins) {
+						allDistinctPlugins.add(plugin);
+					}
 					p2Plugins.forEach(p -> {
 						if (!allDistinctPlugins.contains(p))
 							allDistinctPlugins.add(p);
 					});
 					allDistinctPlugins.addAll(graphPlugins);					
-
+					
+					
 					// Initialisation de l'environnement...
 					mainFrame = new GridFrame(String.format("RobotWar - %s plugin(s) actif(s).", allDistinctPlugins.size()),
 							gameInformations, graphPlugins);
 					mainFrame.setVisible(true);
+					
 
+					
 					// Deroulement de la partie, jusqu'a ce qu'un des robots ne soit plus actif...
 					int turnCounter = 1;
 					while (!gameInformations.isFinished()) {
@@ -287,7 +293,7 @@ public class Launcher {
 							if (gameStatus == 1 || gameStatus == 2)
 								System.out.println(String.format("Le joueur %s gagne la partie !", gameStatus));
 							else if (gameStatus == 3)
-								System.out.println("Les deux joueurs sont ex æquo !");
+								System.out.println("Les deux joueurs sont ex aequo !");
 						}
 
 						// Nous rafraichissons la frame...
