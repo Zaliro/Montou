@@ -83,6 +83,6 @@ Cette méthode est appelée lors de la fin d'un tour afin de sauvegarder l'état
 
 ## Notre équipe
 Noé Mourton-Comte<br/>
-Maxime Diens<br/>
+Maxime Dien<br/>
 Hugo Fourmy<br/>
 Robin Balbis<br/>

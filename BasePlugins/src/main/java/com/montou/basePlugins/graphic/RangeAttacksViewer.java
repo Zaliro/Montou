@@ -27,7 +27,6 @@ public class RangeAttacksViewer {
 			for(int z = 1;z <= x*2-1;z++){
 				largeur = z;
 			}
-			System.out.println();
 			if(robot.getName() == "P1") {
 				g.setColor(new Color(255, 0, 0, 50));
 			}
