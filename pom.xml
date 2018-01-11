@@ -16,7 +16,7 @@
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 		<jdk.version>8</jdk.version>
 		<!-- Ne pas oublier de changer la valeur de la variable ci-dessous selon la machine ! -->
-		<jdk>C:\Program Files\Java\jdk1.8.0_111</jdk> 
+		<jdk>{YOUR_JDK_DIRECTORY}</jdk> 
 	</properties>
 
 	<build>
