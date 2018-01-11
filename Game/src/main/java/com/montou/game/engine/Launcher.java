@@ -62,35 +62,13 @@ public class Launcher {
 					pluginsLoader = new PluginsLoader(pluginsJarPath.getAbsolutePath());
 					loadedPlugins = pluginsLoader.loadPlugins();
 
-					// Initialisation de la partie...
-					if (!mustRecoverLastGame()) {
-						// Si la derniere partie a ete terminee...
-						System.out.println("Initialisation d'une nouvelle partie...");
+					System.out.println("Initialisation d'une nouvelle partie...");
 
-						// Initialisation des joueurs...
+					// Initialisation des joueurs...
+					Robot playerOne = new Robot("P1", BASE_P1_LINE, BASE_P1_COL);
+					Robot playerTwo = new Robot("P2", BASE_P2_LINE, BASE_P2_COL);
 
-						Robot playerOne = new Robot("P1", BASE_P1_LINE, BASE_P1_COL);
-						Robot playerTwo = new Robot("P2", BASE_P2_LINE, BASE_P2_COL);
-
-						gameInformations = new GameInformations(WIDTH, HEIGHT, LINES, COLS, playerOne, playerTwo);
-					} else {
-						// Si la derniere partie a ete arrete de maniere innatendue avant la fin...
-						System.out.println("Recuperation de la derniere partie...");
-						gameInformations = getLastSavedGameInformations();
-
-						// Nous recuperons egalement l'etat des plugins le necessitant...
-						List<Plugin> pluginsToRecover = loadedPlugins.stream().filter(x -> x.useCustomData())
-								.collect(Collectors.toList());
-
-						for (Plugin p : pluginsToRecover) {
-							Method onLoadMethod = p.getClazz().getMethod("onLoad", Object[].class);
-							if (onLoadMethod != null) {
-								Object objectsToInject = getLastSavedPluginInformations(p);
-								// Injection des donnees chargees...
-								onLoadMethod.invoke(p.getInstance(), objectsToInject);
-							}
-						}
-					}
+					gameInformations = new GameInformations(WIDTH, HEIGHT, LINES, COLS, playerOne, playerTwo);
 
 					System.out.println("Tache terminee.");
 
@@ -110,6 +88,32 @@ public class Launcher {
 					t.start();
 					t.join();
 					frame.setVisible(false);
+
+					if (frame.tryLoadLastGame()) {
+						// Si la derniere partie a ete arrete de maniere innatendue avant la fin...
+						System.out.println("Recuperation de la derniere partie...");
+						gameInformations = getLastSavedGameInformations();
+						if (gameInformations != null) {
+
+							// Nous recuperons egalement l'etat des plugins le necessitant...
+							List<Plugin> pluginsToRecover = loadedPlugins.stream().filter(x -> x.useCustomData())
+									.collect(Collectors.toList());
+
+							for (Plugin p : pluginsToRecover) {
+								Method onLoadMethod = p.getClazz().getMethod("onLoad", Object[].class);
+								if (onLoadMethod != null) {
+									Object objectsToInject = getLastSavedPluginInformations(p);
+									// Injection des donnees chargees...
+									onLoadMethod.invoke(p.getInstance(), objectsToInject);
+								}
+							}
+
+							System.out.println("Tache terminee.");
+						} else {
+							System.out.println("Impossible de recuperer la derniere partie !");
+						}
+					}
+
 					List<Plugin> p1Plugins = frame.getP1Plugins();
 					List<Plugin> p2Plugins = frame.getP2Plugins();
 					List<Plugin> graphPlugins = frame.getGraphPlugins();
@@ -123,11 +127,11 @@ public class Launcher {
 						if (!allDistinctPlugins.contains(p))
 							allDistinctPlugins.add(p);
 					});
-					allDistinctPlugins.addAll(graphPlugins);					
-					
-					
+					allDistinctPlugins.addAll(graphPlugins);
+
 					// Initialisation de l'environnement...
-					mainFrame = new GridFrame(String.format("RobotWar - %s plugin(s) actif(s).", allDistinctPlugins.size()),
+					mainFrame = new GridFrame(
+							String.format("RobotWar - %s plugin(s) actif(s).", allDistinctPlugins.size()),
 							gameInformations, graphPlugins);
 					mainFrame.setVisible(true);
 					
@@ -176,10 +180,11 @@ public class Launcher {
 												switch (desiredDirection) {
 												case UP:
 													int nextLineUp = currentPlayer.getCurrentLine() - 1;
-													
+
 													if (nextLineUp < 1) {
 														currentPlayer.setCurrentLine(1);
-													} else if (!(nextLineUp == opponentLine && currentCol == opponentCol)) {
+													} else if (!(nextLineUp == opponentLine
+															&& currentCol == opponentCol)) {
 														currentPlayer.setCurrentLine(nextLineUp);
 														// Nous retirons l'energie au joueur...
 														currentPlayer.substractEnergyPoints(energyCost);
@@ -188,10 +193,11 @@ public class Launcher {
 
 												case DOWN:
 													int nextLineDown = currentPlayer.getCurrentLine() + 1;
-													
+
 													if (nextLineDown > LINES) {
 														currentPlayer.setCurrentLine(LINES);
-													} else if (!(nextLineDown == opponentLine && currentCol == opponentCol)) {
+													} else if (!(nextLineDown == opponentLine
+															&& currentCol == opponentCol)) {
 														currentPlayer.setCurrentLine(nextLineDown);
 														// Nous retirons l'energie au joueur...
 														currentPlayer.substractEnergyPoints(energyCost);
@@ -202,7 +208,8 @@ public class Launcher {
 													int nextColLeft = currentPlayer.getCurrentColumn() - 1;
 													if (nextColLeft < 1) {
 														currentPlayer.setCurrentColumn(1);
-													} else if (!(nextColLeft == opponentCol && currentLine == opponentLine)) {
+													} else if (!(nextColLeft == opponentCol
+															&& currentLine == opponentLine)) {
 														currentPlayer.setCurrentColumn(nextColLeft);
 														// Nous retirons l'energie au joueur...
 														currentPlayer.substractEnergyPoints(energyCost);
@@ -214,7 +221,8 @@ public class Launcher {
 													int nextColRight = currentPlayer.getCurrentColumn() + 1;
 													if (nextColRight > COLS) {
 														currentPlayer.setCurrentColumn(COLS);
-													} else if (!(nextColRight == opponentCol && currentLine == opponentLine)) {
+													} else if (!(nextColRight == opponentCol
+															&& currentLine == opponentLine)) {
 														currentPlayer.setCurrentColumn(nextColRight);
 														// Nous retirons l'energie au joueur...
 														currentPlayer.substractEnergyPoints(energyCost);
@@ -249,19 +257,18 @@ public class Launcher {
 								if (p.getType() == PluginType.ATTACK) {
 									// Si c'est un plugin concernant la gestion des attaques...
 									Method attackMethod = p.getClazz().getMethod("attack", GameInformations.class);
-									
+
 									// On recupere l'information de la taille du range de l'attack
-									int rangeAttack = ((AAttack) p.getClazz().getAnnotation(AAttack.class))
-											.range();
-									
+									int rangeAttack = ((AAttack) p.getClazz().getAnnotation(AAttack.class)).range();
+
 									currentPlayer.setRangeAttack(rangeAttack);
 
-									if (attackMethod != null && (int)attackMethod.invoke(p.getInstance(), gameInformations) > 0) {
+									if (attackMethod != null
+											&& (int) attackMethod.invoke(p.getInstance(), gameInformations) > 0) {
 										// Nous soutrayons l'energie au joueur courant...
 										int energyCost = ((AAttack) p.getClazz().getAnnotation(AAttack.class))
 												.energyCost();
-										
-										
+
 										// Nous verifions si le joueur dispose d'assez d'energie...
 
 										if ((currentPlayer.getEnergyPoints() - energyCost) >= 0) {
@@ -276,7 +283,7 @@ public class Launcher {
 									}
 								}
 							}
-							
+
 							// Regeneration des points d'energie...
 							currentPlayer.regen(ENERGY_REGEN_RATE);
 
@@ -306,7 +313,7 @@ public class Launcher {
 						Thread.sleep(TIME_BETWEEN_TURN);
 						turnCounter += 1;
 					}
-					
+
 				} else {
 					System.out.println(String
 							.format("Il semblerait que l'argument 'persistenceDirPath' soit invalide : %s !", args[1]));
@@ -315,7 +322,6 @@ public class Launcher {
 				System.out.println(
 						String.format("Il semblerait que l'argument 'pluginsJarPath' soit invalide : %s !", args[0]));
 			}
-
 		} else {
 			System.out
 					.println("Arguments de lancements incorrects : java Launcher -pluginsJarPath -persistenceDirPath");

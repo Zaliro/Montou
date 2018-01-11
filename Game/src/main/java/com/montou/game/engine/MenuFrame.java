@@ -34,6 +34,7 @@ public class MenuFrame extends JFrame {
 	JPanel panelHome;
 	PluginsList panelPlugins;
 	boolean start = false;
+	boolean loadLastGame = false;
 	
 	public MenuFrame (String title, GameInformations gameInformations, List<Plugin> plugins) {
 
@@ -64,6 +65,8 @@ public class MenuFrame extends JFrame {
 		JButton bContinue = new JButton("Poursuivre");
 		bContinue.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
+				loadLastGame = true;
+				start();
 			}
 		});
 		bContinue.setBounds(135, 267, 196, 61);
@@ -86,6 +89,10 @@ public class MenuFrame extends JFrame {
 	
 	public boolean canStart() {
 		return this.start;
+	}
+	
+	public boolean tryLoadLastGame() {
+		return this.loadLastGame;
 	}
 	
 	List<Plugin> getP1Plugins(){
