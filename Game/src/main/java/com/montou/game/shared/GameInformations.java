@@ -1,5 +1,6 @@
 package com.montou.game.shared;
 
+import java.util.List;
 import java.io.Serializable;
 
 import com.montou.game.entities.Robot;
@@ -18,6 +19,11 @@ public class GameInformations implements Serializable, Cloneable {
 	private boolean isFinished;
 	private int exitCode;
 	
+	// Plugins
+	private List<String> playerOnePlugins;
+	private List<String> playerTwoPlugins;
+	private List<String> graphicsPlugins;
+	
 	public GameInformations(int width, int height, int lines, int cols, Robot playerOne, Robot playerTwo) {
 		this.width = width;
 		this.height = height;
@@ -29,7 +35,7 @@ public class GameInformations implements Serializable, Cloneable {
 		
 		this.isFinished = false;
 	}
-	
+
 	public int getWidth() {
 		return this.width;
 	}
@@ -52,6 +58,30 @@ public class GameInformations implements Serializable, Cloneable {
 	
 	public Robot getPlayerTwo() {
 		return this.playerTwo;
+	}
+	
+	public List<String> getPlayerOnePlugins() {
+		return this.playerOnePlugins;
+	}
+	
+	public void setPlayerOnePlugins(List<String> playerOnePlugins) {
+		this.playerOnePlugins = playerOnePlugins;
+	}
+	
+	public List<String> getPlayerTwoPlugins() {
+		return this.playerTwoPlugins;
+	}
+	
+	public void setPlayerTwoPlugins(List<String> playerTwoPlugins) {
+		this.playerTwoPlugins = playerTwoPlugins;
+	}
+	
+	public List<String> getGraphicsPlugins() {
+		return this.graphicsPlugins;
+	}
+	
+	public void setGraphicsPlugins(List<String> graphicsPlugins) {
+		this.graphicsPlugins = graphicsPlugins;
 	}
 	
 	public boolean isFinished() {

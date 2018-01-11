@@ -5,7 +5,10 @@ import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
+
+import javax.swing.JOptionPane;
 
 import com.montou.game.entities.Robot;
 import com.montou.game.persistence.PersistenceManager;
@@ -89,11 +92,37 @@ public class Launcher {
 					t.join();
 					frame.setVisible(false);
 
+					List<Plugin> p1Plugins = frame.getP1Plugins();
+					List<Plugin> p2Plugins = frame.getP2Plugins();
+					List<Plugin> graphPlugins = frame.getGraphPlugins();
+					
 					if (frame.tryLoadLastGame()) {
 						// Si la derniere partie a ete arrete de maniere innatendue avant la fin...
 						System.out.println("Recuperation de la derniere partie...");
 						gameInformations = getLastSavedGameInformations();
 						if (gameInformations != null) {
+							
+							
+							p1Plugins.clear();
+							gameInformations.getPlayerOnePlugins().forEach(p -> {
+								Optional<Plugin> targetP = loadedPlugins.stream().filter(x -> x.getClazz().getName().equals(p)).findFirst();
+								if (targetP.isPresent())
+									p1Plugins.add(targetP.get());
+							});
+							
+							p2Plugins.clear();
+							gameInformations.getPlayerTwoPlugins().forEach(p -> {
+								Optional<Plugin> targetP = loadedPlugins.stream().filter(x -> x.getClazz().getName().equals(p)).findFirst();
+								if (targetP.isPresent())
+									p2Plugins.add(targetP.get());
+							});
+							
+							graphPlugins.clear();
+							gameInformations.getGraphicsPlugins().forEach(p -> {
+								Optional<Plugin> targetP = loadedPlugins.stream().filter(x -> x.getClazz().getName().equals(p)).findFirst();
+								if (targetP.isPresent())
+									graphPlugins.add(targetP.get());
+							});
 
 							// Nous recuperons egalement l'etat des plugins le necessitant...
 							List<Plugin> pluginsToRecover = loadedPlugins.stream().filter(x -> x.useCustomData())
@@ -111,12 +140,14 @@ public class Launcher {
 							System.out.println("Tache terminee.");
 						} else {
 							System.out.println("Impossible de recuperer la derniere partie !");
+							JOptionPane.showMessageDialog(null, String.format("Impossible de trouver une partie dans '%s' !", persistenceDirPath.getAbsolutePath()));
+							System.exit(0);
 						}
+					} else {
+						gameInformations.setPlayerOnePlugins(p1Plugins.stream().map(Plugin::getName).collect(Collectors.toList()));
+						gameInformations.setPlayerTwoPlugins(p2Plugins.stream().map(Plugin::getName).collect(Collectors.toList()));
+						gameInformations.setGraphicsPlugins(graphPlugins.stream().map(Plugin::getName).collect(Collectors.toList()));
 					}
-
-					List<Plugin> p1Plugins = frame.getP1Plugins();
-					List<Plugin> p2Plugins = frame.getP2Plugins();
-					List<Plugin> graphPlugins = frame.getGraphPlugins();
 
 					// Comptons les plugins actifs...
 					List<Plugin> allDistinctPlugins = new ArrayList<Plugin>();
@@ -131,11 +162,10 @@ public class Launcher {
 
 					// Initialisation de l'environnement...
 					mainFrame = new GridFrame(
-							String.format("RobotWar - %s plugin(s) actif(s).", allDistinctPlugins.size()),
+							String.format("RobotWar - %s plugin(s) actif(s)", allDistinctPlugins.size()),
 							gameInformations, graphPlugins);
 					mainFrame.setVisible(true);
 					
-
 					
 					// Deroulement de la partie, jusqu'a ce qu'un des robots ne soit plus actif...
 					int turnCounter = 1;
@@ -296,11 +326,16 @@ public class Launcher {
 						int gameStatus = checkGameStatus();
 						System.out.println(String.format("GameStatusCode : %s", gameStatus));
 						if (gameStatus != 0) {
+							String resMessage = "";
 							gameInformations.finish(gameStatus);
 							if (gameStatus == 1 || gameStatus == 2)
-								System.out.println(String.format("Le joueur %s gagne la partie !", gameStatus));
+								resMessage = String.format("Le joueur %s gagne la partie !", gameStatus);
 							else if (gameStatus == 3)
-								System.out.println("Les deux joueurs sont ex aequo !");
+								resMessage = "Les deux joueurs sont ex-aequo !";
+							
+							System.out.println(resMessage);
+							JOptionPane.showMessageDialog(null, resMessage);
+							System.exit(0);
 						}
 
 						// Nous rafraichissons la frame...

@@ -1,6 +1,5 @@
 package com.montou.basePlugins.movement;
 
-import com.montou.basePlugins.utilities.EnumUtilities;
 import com.montou.game.entities.Robot;
 import com.montou.game.plugins.annotations.AMovement;
 import com.montou.game.shared.Direction;

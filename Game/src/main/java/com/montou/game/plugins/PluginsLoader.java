@@ -17,7 +17,6 @@ import java.util.zip.ZipFile;
 import com.montou.game.plugins.annotations.AAttack;
 import com.montou.game.plugins.annotations.AGraphic;
 import com.montou.game.plugins.annotations.AMovement;
-import com.montou.game.shared.GameInformations;
 
 public class PluginsLoader extends ClassLoader {
 	

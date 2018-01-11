@@ -25,6 +25,10 @@ public class Plugin {
 		return this.clazz;
 	}
 	
+	public String getName() {
+		return this.clazz.getName();
+	}
+	
 	public Object getInstance() throws InstantiationException, IllegalAccessException {
 		if (this.instance == null)
 			this.instance = this.clazz.newInstance();
