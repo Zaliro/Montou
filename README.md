@@ -62,7 +62,12 @@ Vous devez donc retourner une ```Direction``` qui sera utilisée par le moteur d
 
 ### Développement d'un plugin de gestion d'attaques
 **Annotation à préciser** *(sur votre classe)* : @AAttack(**energyCost** = **n**).
-###### :construction: Cette partie est actuellement en construction.
+**Méthode à implémenter** :
+```java
+public int attack(GameInformations gameInformations) 
+```
+
+Vous devez retourner un entier ```int``` qui correspond aux dommage appliqué au robot ennemi.
 
 ### Rendre votre plugin persistant
 *Tous les types de plugins peuvent implémenter le système de persistence mis à disposition.*
