@@ -32,6 +32,10 @@ Implémentation minimaliste d'un **RobotWar** incluant un système de plugins ai
 
 :information_source: <i>Si vous ne souhaitez pas que cette partie reprenne, il vous suffit de supprimer l'ensemble des fichiers se trouvant dans le dossier  **persistenceDirPath**.</i>
 
+#### Troisième solution - Lancement avec JAR.
+1. Se positionner (via la console) dans le dossier "Demonstration".
+2. Exécuter la ligne de commande suivante : "java -jar Game-0.0.1.jar BasePlugins-0.0.1.jar /Persistence"
+
 ## Développer un plugin
 Il existe **trois types de plugins** bien distincts à savoir :
 ##### 1. Les plugins graphiques
